@@ -19,6 +19,25 @@ Deno.test("return", () => {
   );
 });
 
+Deno.test("README example", () => {
+  const input =
+    '<article><img src="http://internal.site/image.jpg"><a href="http://internal.site/page.html">page</a><a href="http://example.com">link</a></article>';
+  const p = rehype().use(urls, (url: string) => {
+    if (new URL(url).host === "internal.site") {
+      return new URL(url).pathname;
+    }
+    return url;
+  }).freeze();
+
+  assertEquals(
+    p.processSync(input).value,
+    wrap(
+      '<article><img src="/image.jpg"><a href="/page.html">page</a><a href="http://example.com">link</a></article>',
+    ),
+    "process readme example",
+  );
+});
+
 function wrap(html: string) {
   return `<html><head></head><body>${html}</body></html>`;
 }
