@@ -18,15 +18,15 @@ You can use the following script:
 
 ```js
 import { rehype } from "npm:rehype";
-import urls from "rehype-urls";
+import urls from "jsr:@lino/rehype-urls";
 
 rehype()
   .use(urls, removeBaseUrl)
-  .process(input, handleOutput);
+  .process(input, console.log);
 
 function removeBaseUrl(url: string) {
-  if (new URL(url).host === "internal.site") {
-    return url.path;
+  if (new URL(url).hostname === "internal.site") {
+    return new URL(url).pathname;
   }
   return url;
 }
